@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Robust Locomotion Control for Legged Robots</title>
+  <meta name="description" content="Robust Locomotion Control for Legged Robots in Complex and Unstructured Terrains.">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- KaTeX Math Rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+          onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-blue-500 selection:text-white">
+
+  <!-- Top Navigation Bar -->
+  <nav class="sticky top-0 z-50 backdrop-blur-md bg-white/80 border-b border-slate-200/80 transition-all">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+      <span class="font-bold text-slate-900 tracking-tight flex items-center gap-2">
+        <i class="fa-solid fa-robot text-blue-600"></i> Legged Robot Control
+      </span>
+      <div class="flex items-center gap-4 text-sm font-medium text-slate-600">
+        <a href="#abstract" class="hover:text-blue-600 transition">Abstract</a>
+        <a href="#pipeline" class="hover:text-blue-600 transition">Method</a>
+        <a href="#experiments" class="hover:text-blue-600 transition">Results</a>
+        <a href="#citation" class="hover:text-blue-600 transition">Citation</a>
+        <a href="https://github.com/RegulusSJD/legged-robot-control" target="_blank" 
+           class="bg-slate-900 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-slate-800 transition inline-flex items-center gap-1.5 shadow-sm">
+          <i class="fa-brands fa-github"></i> GitHub
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+
+    <!-- Header / Title Section -->
+    <header class="text-center mb-12">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold uppercase tracking-wider mb-4">
+        <i class="fa-solid fa-fire"></i> Robotics &amp; Autonomous Systems
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight leading-tight mb-4">
+        Robust Locomotion Control for Legged Robots in Unstructured Terrains
+      </h1>
+      
+      <!-- Authors -->
+      <div class="flex flex-wrap justify-center items-center gap-x-4 gap-y-1 text-base sm:text-lg font-medium text-slate-700 mb-2">
+        <span class="hover:text-blue-600 cursor-pointer">SJD Author<sup>1*</sup></span>
+        <span class="text-slate-400">&bull;</span>
+        <span class="hover:text-blue-600 cursor-pointer">Collaborator A<sup>2</sup></span>
+        <span class="text-slate-400">&bull;</span>
+        <span class="hover:text-blue-600 cursor-pointer">Collaborator B<sup>1</sup></span>
+      </div>
+      
+      <!-- Affiliations -->
+      <p class="text-sm text-slate-500 mb-8">
+        <sup>1</sup> Robotics &amp; AI Lab &nbsp;&nbsp;|&nbsp;&nbsp; <sup>2</sup> Department of Control Science &amp; Engineering
+      </p>
+
+      <!-- Action Badges / Links -->
+      <div class="flex flex-wrap justify-center gap-3">
+        <a href="https://arxiv.org" target="_blank" 
+           class="inline-flex items-center gap-2 bg-slate-900 text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-blue-600 transition shadow-sm hover:shadow">
+          <i class="fa-solid fa-file-lines"></i> arXiv Paper
+        </a>
+        <a href="https://github.com/RegulusSJD/legged-robot-control" target="_blank" 
+           class="inline-flex items-center gap-2 bg-slate-900 text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-blue-600 transition shadow-sm hover:shadow">
+          <i class="fa-brands fa-github"></i> Code Repository
+        </a>
+        <a href="#video-demo" 
+           class="inline-flex items-center gap-2 bg-slate-900 text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-blue-600 transition shadow-sm hover:shadow">
+          <i class="fa-solid fa-circle-play"></i> Video Demo
+        </a>
+        <a href="#citation" 
+           class="inline-flex items-center gap-2 bg-slate-200 text-slate-800 px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-slate-300 transition shadow-sm">
+          <i class="fa-solid fa-quote-left"></i> BibTeX
+        </a>
+      </div>
+    </header>
+
+    <!-- Interactive Hero Video / Teaser -->
+    <section id="video-demo" class="mb-14">
+      <div class="relative bg-slate-950 rounded-2xl overflow-hidden shadow-2xl border border-slate-800 aspect-video flex items-center justify-center group">
+        <!-- Background Animation Canvas / Video Mockup -->
+        <div class="absolute inset-0 bg-gradient-to-tr from-slate-950 via-slate-900 to-blue-950/40 flex flex-col items-center justify-center p-8 text-center">
+          <div class="w-16 h-16 rounded-full bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-blue-400 mb-4 animate-pulse">
+            <i class="fa-solid fa-play text-2xl ml-1"></i>
+          </div>
+          <h3 class="text-white text-lg sm:text-xl font-bold tracking-tight mb-2">Sim2Real Legged Locomotion Demonstration</h3>
+          <p class="text-slate-400 text-xs sm:text-sm max-w-lg">
+            Blind &amp; visual-aided locomotion on rocky terrains, slope climbing (up to 35&deg;), and continuous external impulse disturbance recovery.
+          </p>
+          <span class="mt-4 inline-block text-[11px] font-mono text-slate-500 bg-slate-900/90 px-3 py-1 rounded-md border border-slate-800">
+            Tip: Replace this container with &lt;video&gt; or YouTube / Bilibili iframe
+          </span>
+        </div>
+      </div>
+      <p class="text-center text-xs text-slate-500 mt-3">
+        <b>Figure 1:</b> Quadruped robot traversing diverse challenging terrain profiles without prior mapping.
+      </p>
+    </section>
+
+    <!-- Key Highlights / Badges Grid -->
+    <section class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-14">
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:border-blue-300 transition">
+        <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center mb-3">
+          <i class="fa-solid fa-mountain text-lg"></i>
+        </div>
+        <h4 class="font-bold text-slate-900 text-base mb-1">Zero-Shot Sim2Real</h4>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Massive parallel reinforcement learning in Isaac Gym with asymmetric actor-critic domain randomization.
+        </p>
+      </div>
+
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:border-emerald-300 transition">
+        <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center mb-3">
+          <i class="fa-solid fa-shield-halved text-lg"></i>
+        </div>
+        <h4 class="font-bold text-slate-900 text-base mb-1">Impulse Recovery</h4>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Dynamic footfall adjustment and body posture adaptation under sudden lateral impacts of up to 150 N.
+        </p>
+      </div>
+
+      <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:border-purple-300 transition">
+        <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center mb-3">
+          <i class="fa-solid fa-bolt text-lg"></i>
+        </div>
+        <h4 class="font-bold text-slate-900 text-base mb-1">Low-Latency Execution</h4>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          50 Hz high-level policy inference combined with 500 Hz low-level joint torque PD impedance control.
+        </p>
+      </div>
+    </section>
+
+    <!-- Abstract -->
+    <section id="abstract" class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm mb-14">
+      <h2 class="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-2.5">
+        <span class="w-2 h-6 bg-blue-600 rounded-full"></span> Abstract
+      </h2>
+      <p class="text-slate-700 text-sm sm:text-base leading-relaxed text-justify">
+        Autonomous locomotion of legged robots across unmapped, complex geometries presents a significant challenge due to severe contact discontinuities, sensor noise, and modeling inaccuracies. In this work, we propose an end-to-end framework combining model predictive guidance with deep reinforcement learning. By leveraging privileged environmental observations during simulation training and distilling them into a temporal student policy operating solely on onboard proprioceptive sensors, our system enables agile, robust, and energy-efficient locomotion. Experimental evaluations across diverse real-world obstacles demonstrate that our controller achieves exceptional stability, high obstacle traversal rates, and smooth sim-to-real transfer.
+      </p>
+    </section>
+
+    <!-- Pipeline / Method Architecture -->
+    <section id="pipeline" class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm mb-14">
+      <h2 class="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-2.5">
+        <span class="w-2 h-6 bg-blue-600 rounded-full"></span> System Architecture &amp; Pipeline
+      </h2>
+      <p class="text-slate-600 text-sm mb-6">
+        The complete pipeline consists of state estimation, an actor-critic deep neural policy network, and a low-level joint PD torque actuator loop:
+      </p>
+      
+      <!-- Embedded SVG Diagram -->
+      <div class="border border-slate-200 rounded-xl overflow-hidden bg-slate-50 p-2 sm:p-4 mb-6 shadow-inner">
+        <img src="assets/pipeline.svg" alt="Control Architecture Pipeline" class="w-full h-auto">
+      </div>
+
+      <h3 class="font-bold text-slate-900 text-base mb-2">Mathematical Formulation</h3>
+      <p class="text-sm text-slate-600 mb-3">
+        The policy optimization optimizes the expected discounted reward over trajectory rollouts $\tau$:
+      </p>
+      <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 overflow-x-auto text-sm text-center mb-4">
+        $$J(\pi_\theta) = \mathbb{E}_{\tau \sim \pi_\theta} \left[ \sum_{t=0}^{T} \gamma^t \left( r_{\text{track}}(s_t, a_t) - \lambda_e \|\tau_t \dot{q}_t\|_2^2 - \lambda_s \|a_t - a_{t-1}\|_2^2 \right) \right]$$
+      </div>
+      <p class="text-xs text-slate-500">
+        Where $r_{\text{track}}$ denotes linear and angular velocity tracking reward, $\lambda_e$ penalizes actuator power consumption, and $\lambda_s$ enforces joint acceleration smoothness.
+      </p>
+    </section>
+
+    <!-- Experimental Results Benchmark -->
+    <section id="experiments" class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm mb-14">
+      <h2 class="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-2.5">
+        <span class="w-2 h-6 bg-blue-600 rounded-full"></span> Experimental Benchmark
+      </h2>
+      <p class="text-slate-600 text-sm mb-6">
+        Quantitative comparison against baseline controllers across challenging simulated and real-world conditions:
+      </p>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm text-slate-700 border-collapse">
+          <thead>
+            <tr class="bg-slate-100 text-slate-900 font-semibold border-b border-slate-300">
+              <th class="py-3 px-4">Method</th>
+              <th class="py-3 px-4">Max Slope</th>
+              <th class="py-3 px-4">Push Resistance</th>
+              <th class="py-3 px-4">Traversal Rate</th>
+              <th class="py-3 px-4">Cost of Transport (CoT)</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-200">
+            <tr class="hover:bg-slate-50">
+              <td class="py-3 px-4 font-medium text-slate-900">Standard MPC</td>
+              <td class="py-3 px-4">18&deg;</td>
+              <td class="py-3 px-4">60 N</td>
+              <td class="py-3 px-4">71.5%</td>
+              <td class="py-3 px-4">1.42</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="py-3 px-4 font-medium text-slate-900">Vanilla RL (PPO)</td>
+              <td class="py-3 px-4">24&deg;</td>
+              <td class="py-3 px-4">95 N</td>
+              <td class="py-3 px-4">82.3%</td>
+              <td class="py-3 px-4">1.18</td>
+            </tr>
+            <tr class="bg-blue-50/60 font-semibold text-blue-900">
+              <td class="py-3 px-4 flex items-center gap-1.5">
+                <i class="fa-solid fa-star text-amber-500 text-xs"></i> <b>Ours (Proposed)</b>
+              </td>
+              <td class="py-3 px-4"><b>35&deg;</b></td>
+              <td class="py-3 px-4"><b>150 N</b></td>
+              <td class="py-3 px-4"><b>96.8%</b></td>
+              <td class="py-3 px-4"><b>0.87</b></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Citation / BibTeX Section -->
+    <section id="citation" class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm mb-12">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-2xl font-bold text-slate-900 flex items-center gap-2.5">
+          <span class="w-2 h-6 bg-blue-600 rounded-full"></span> Citation
+        </h2>
+        <button id="copy-btn" onclick="copyBibtex()" 
+                class="inline-flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3 py-1.5 rounded-md transition active:scale-95">
+          <i class="fa-regular fa-copy"></i> <span id="copy-text">Copy BibTeX</span>
+        </button>
+      </div>
+      <div class="relative">
+        <pre id="bibtex-code" class="bg-slate-950 text-slate-200 p-4 rounded-xl text-xs sm:text-sm overflow-x-auto leading-relaxed border border-slate-800"><code>@article{sjd2026leggedcontrol,
+  title   = {Robust Locomotion Control for Legged Robots in Unstructured Terrains},
+  author  = {SJD and Collaborators},
+  journal = {arXiv preprint arXiv:2609.XXXXX},
+  year    = {2026},
+  url     = {https://github.com/RegulusSJD/legged-robot-control}
+}</code></pre>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-200 bg-white py-8 text-center text-xs text-slate-500">
+    <div class="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p>Project page template built for <a href="https://github.com/RegulusSJD/legged-robot-control" class="text-blue-600 font-medium hover:underline">RegulusSJD/legged-robot-control</a>.</p>
+      <p>Hosted with &hearts; via <a href="https://pages.github.com/" target="_blank" class="hover:underline font-medium">GitHub Pages</a></p>
+    </div>
+  </footer>
+
+  <script>
+    function copyBibtex() {
+      const code = document.getElementById('bibtex-code').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const text = document.getElementById('copy-text');
+        text.innerText = "Copied!";
+        setTimeout(() => { text.innerText = "Copy BibTeX"; }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>
